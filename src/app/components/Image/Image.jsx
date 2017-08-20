@@ -25,9 +25,9 @@ export class Image extends React.Component {
         let indexOfStart = this.props.baseUrl.indexOf('*');
         let imgSrc = this.props.baseUrl.substring(0, indexOfStart) + this.props.index + this.props.baseUrl.substring(indexOfStart + 1);
 
-        return(<img className={this.className} ref={(img) => {
+        return(<div className={this.className} ref={(img) => {
             this.imageBody = img;
-        }} src={imgSrc} onLoad={() => {
+        }}><img src={imgSrc} onLoad={() => {
             if(this.props.callback != null){
                 this.props.callback();
             }
@@ -35,7 +35,16 @@ export class Image extends React.Component {
             if(this.props.callback != null){
                 this.imageBody.remove();
             }
-        }}/>);
+        }}/></div>);
+    }
+
+    /**
+     * The event that handles the event for when the user clicks on the button
+     * 
+     * @returns {void}
+     */
+    imageClickHandler(){
+        
     }
 }
 

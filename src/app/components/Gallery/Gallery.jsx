@@ -16,7 +16,8 @@ export class Gallery extends React.Component {
         super();
         this.className = 'E8CSls1TAR';
         this.state = {
-            loadedImages: 0
+            loadedImages: 0,
+            focusedImage: null
         };
     }
 
@@ -31,6 +32,8 @@ export class Gallery extends React.Component {
         for(let i = 0; i < this.state.loadedImages; i++){
             children.push(<Image key={'image' + i} baseUrl={this.props.dir} index={i}></Image>);
         }
+
+        
 
         children.push(<Image key={'image' + this.state.loadedImages} baseUrl={this.props.dir} index={this.state.loadedImages} callback={this.imageCallback.bind(this)}></Image>);
 
