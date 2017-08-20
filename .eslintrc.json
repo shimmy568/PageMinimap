@@ -1,0 +1,41 @@
+{
+    "env": {
+        "browser": true,
+        "commonjs": true,
+        "es6": true,
+        "node": true
+    },
+    "plugins": [
+        "react"
+    ],
+    "parserOptions": {
+        "ecmaFeatures": {
+            "jsx": true
+        },
+        "sourceType": "module"
+    },
+    "extends": ["eslint:recommended",  "plugin:react/recommended"],
+    "rules": {
+        "no-const-assign": "error",
+        "semi": ["error", "always"],
+        "no-this-before-super": "error",
+        "no-undef": "warn",
+        "no-unreachable": "error",
+        "no-unused-vars": "warn",
+        "constructor-super": "error",
+        "valid-typeof": "error",
+        "valid-jsdoc": "warn",
+        "eqeqeq": ["warn", "smart"],
+        "react/jsx-uses-react": "error",
+        "react/jsx-uses-vars": "error",
+        "require-jsdoc": ["error", {
+            "require": {
+                "FunctionDeclaration": true,
+                "MethodDefinition": true,
+                "ClassDeclaration": true,
+                "ArrowFunctionExpression": false
+            }
+        }],
+        "block-scoped-var": "error"
+    }
+}
