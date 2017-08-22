@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import './Gallery.less';
+import './Gallery.scss';
 import { Image } from './../Image/Image.jsx';
 
 /**
- * A thing for testing a playing around
+ * An image gallery
  */
 export class Gallery extends React.Component {
 
@@ -17,27 +17,30 @@ export class Gallery extends React.Component {
         this.className = 'E8CSls1TAR';
         this.state = {
             loadedImages: 0,
-            focusedImage: null
+            focusedImage: -1
         };
     }
 
     /**
      * The render method for the Gallery component
      *
-     * @returns {void}
+     * @returns {JSX.Element} - The rendered content for the component
      */
     render() {
         let children = [];
 
         for(let i = 0; i < this.state.loadedImages; i++){
-            children.push(<Image key={'image' + i} baseUrl={this.props.dir} index={i}></Image>);
+            children.push(<Image key={'image' + i} focusImage={this.focusImage.bind(this)} baseUrl={this.props.dir} index={i}></Image>);
         }
 
-        
+        let focusedImage;
+        if(this.state.focusedImage !== -1){
+            focusedImage = (<div>{this.state.focusedImage}</div>);
+        }
 
-        children.push(<Image key={'image' + this.state.loadedImages} baseUrl={this.props.dir} index={this.state.loadedImages} callback={this.imageCallback.bind(this)}></Image>);
+        children.push(<Image key={'image' + this.state.loadedImages} focusImage={this.focusImage.bind(this)} baseUrl={this.props.dir} index={this.state.loadedImages} callback={this.imageCallback.bind(this)}></Image>);
 
-        return (<div className={this.className}>{children}</div>);
+        return (<div className={this.className}>{focusedImage}{children}</div>);
     }
 
     /**
@@ -49,6 +52,20 @@ export class Gallery extends React.Component {
     imageCallback(){
         this.setState({
             loadedImages: this.state.loadedImages + 1
+        });
+    }
+
+    /**
+     * Makes a given image the focused one, this means that it's big and up front and shit
+     * @author Owen Anderson
+     * 
+     * @param {number} imageIndex - The index of the image in the gallery
+     * 
+     * @returns {void}
+     */
+    focusImage(imageIndex){
+        this.setState({
+            focusedImage: imageIndex
         });
     }
 }

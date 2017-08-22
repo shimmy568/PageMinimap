@@ -1,9 +1,7 @@
-@imagePrefix: ~'.mYx5yS5nJo';
-
-@{imagePrefix} {
+$imagePrefix: '.mYx5yS5nJo';
+#{$imagePrefix} {
     flex-grow: 1;
     flex-basis: 250px;
-
     width: 300px;
     padding: 10px;
     border-style: solid;
@@ -12,13 +10,15 @@
     border-width: 2px;
     border-radius: 5px;
     margin: 10px;
-
-    img{
+    img {
         width: 100%;
+        .focused {
+            background-color: red;
+        }
     }
 }
 
-@{imagePrefix}:hover {
-    background-color: #B1B1B1;
+#{$imagePrefix}:hover {
+    background-color: darken(lightgray, 10);
     cursor: pointer;
 }
