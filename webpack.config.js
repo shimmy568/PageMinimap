@@ -9,7 +9,7 @@ const extractLess = new ExtractTextPlugin({
 
 module.exports = {
     context: path.join(__dirname, "src"),
-    devtool: "inline-sourcemap",
+    devtool: "source-map",
     entry: "./app/index.jsx",
     module: {
         loaders: [{
@@ -35,5 +35,5 @@ module.exports = {
             'fetch': 'imports?this=>global!exports?global.fetch!whatwg-fetch'
         }),
         extractLess
-    ]
+    ],
 };
