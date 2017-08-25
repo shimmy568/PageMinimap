@@ -23,7 +23,25 @@ module.exports = {
             {
                 test: /\.scss$/,
                 loader: "style-loader!css-loader!sass-loader"
+            },
+            {
+                test: /\.jpg$/,
+                use: ["file-loader"]
+            }, {
+                test: /\.png$/,
+                use: ["url-loader?mimetype=image/png"]
+            },
+            {
+                test: /\.(html)$/,
+                use: {
+                    loader: 'html-loader',
+                    options: {
+                        attrs: [':data-src']
+                    }
+                }
             }
+        ],
+        rules: [
         ]
     },
     output: {

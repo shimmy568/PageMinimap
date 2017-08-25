@@ -1,5 +1,14 @@
-$className: 'rGEIdPsvTA';
+$className: '.rGEIdPsvTA';
 
 #{$className}{
-    background: red;
+    width: 100%;
+    padding: 10px;
+    background-color: lightgray;
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 5px;
+    border-color: gray;
+    img{
+        width: 100%;
+    }
 }

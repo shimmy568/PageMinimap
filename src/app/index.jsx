@@ -1,7 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import { Gallery } from './components/Gallery/Gallery.jsx';
+import './index.scss';
+
+//import { Gallery } from './components/Gallery/Gallery.jsx';
 import { SlideShow } from './components/SlideShow/SlideShow.jsx';
 
 let imageList = [
@@ -14,4 +16,4 @@ let imageList = [
 ];
 
 ReactDOM.render(
-    <SlideShow images={imageList}></SlideShow>, document.getElementById('root'));
+    <div id="container"><SlideShow images={imageList}></SlideShow></div>, document.getElementById('root'));
