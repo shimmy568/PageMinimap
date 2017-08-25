@@ -1,6 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import Next from "./assets/Next.svg";
+import Previous from "./assets/Previous.svg";
+
 import './SlideShow.scss';
 
 /**

@@ -15,5 +15,6 @@ let imageList = [
     './images/image5.png'
 ];
 
+
 ReactDOM.render(
     <div id="container"><SlideShow images={imageList}></SlideShow></div>, document.getElementById('root'));

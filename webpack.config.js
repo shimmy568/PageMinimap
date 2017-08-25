@@ -13,14 +13,31 @@ module.exports = {
     entry: "./app/index.jsx",
     module: {
         loaders: [{
-                test: /\.jsx?/,
-                exclude: /(node_modules)/,
+                test: /(\.js|\.jsx)$/,
+                exclude: /(node_modules|dist)/,
                 loader: 'babel-loader',
                 query: {
                     presets: ['react', 'es2015']
                 }
             },
             {
+                test: /\.svg$/,
+                use: [{
+                        loader: 'babel-loader'
+                    },
+                    {
+                        loader: 'react-svg-loader',
+                        options: {
+                            svgo: {
+                                plugins: [{
+                                    removeTitle: false
+                                }],
+                                floatPrecision: 2
+                            }
+                        }
+                    }
+                ]
+            }, {
                 test: /\.scss$/,
                 loader: "style-loader!css-loader!sass-loader"
             },
@@ -40,8 +57,6 @@ module.exports = {
                     }
                 }
             }
-        ],
-        rules: [
         ]
     },
     output: {
