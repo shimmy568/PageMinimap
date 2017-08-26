@@ -26,8 +26,13 @@ export class SlideShow extends React.Component{
 
         this.state = {
             currentImageIndex: 0,
-            first: true
+            first: true,
+            imageAspectRatio: -1 //Base value untill it gets set for the first time
         };
+
+        //vars used for getting the aspect ratio of the div with an image in it
+        this.extraWidth = (11 * 2); //10px for padding on left and right and border width
+        this.extraHeight = 42 + (11 * 2); //42 is the height of the buttons above
     }
 
     /**
@@ -46,7 +51,7 @@ export class SlideShow extends React.Component{
         }
 
         let curIndex;
-        if(this.state.first && !this.__isIndexOutOfRange(this.props.startIndex)){
+        if(this.state.first && !this.isIndexOutOfRange(this.props.startIndex)){
             curIndex = this.props.startIndex;
         }else{
             curIndex = this.state.currentImageIndex;
@@ -54,11 +59,72 @@ export class SlideShow extends React.Component{
 
         let imageSrc = this.props.images[curIndex];
 
+        let fullscreenOnLoadEvent;
+        if(this.props.fullscreen){
+            //If its the first time for aspect ratio set
+            if(this.slideShowContainer != null && this.slideShowContainer.style.width === "" && this.state.imageAspectRatio !== -1){
+                this.updateImageSize();
+            }
+            fullscreenOnLoadEvent = this.updateAspectRatio.bind(this);
+            window.addEventListener("resize", this.updateImageSize.bind(this));
+        }
+
         return(
-        <div className={classValue} tabIndex="99999" onKeyDown={this.keyDownEventHandler.bind(this)} onKeyUp={this.resetImageChangeCooldown.bind(this)}>
-            <button/>
-            <img src={imageSrc} onClick={this.nextImage.bind(this)}/>
-        </div>);
+            <div ref={(input) => {this.slideShowContainer = input;}} className={classValue} tabIndex="99999" onKeyDown={this.keyDownEventHandler.bind(this)} onKeyUp={this.resetImageChangeCooldown.bind(this)}>
+                <div className="buttonContainer">
+                    <button onClick={this.previousImage.bind(this)}><Previous width={24} height={24}/></button>
+                    <div className="numberReadout">{curIndex + 1}/{this.props.images.length}</div>
+                    <button onClick={this.nextImage.bind(this)}><Next width={24} height={24}/></button>
+                </div>
+                <img src={imageSrc} onLoad={fullscreenOnLoadEvent} onClick={this.nextImage.bind(this)}/>
+            </div>
+        );
+    }
+
+    /**
+     * Updates the aspect ratio for fullscreen
+     * @author Owen Anderson
+     * 
+     * @returns {void}
+     */
+    updateAspectRatio(){
+        let loadedImage = this.slideShowContainer.getElementsByTagName("IMG")[0];
+
+
+        let divWidth = loadedImage.getBoundingClientRect().width;
+        let divHeight = loadedImage.getBoundingClientRect().height;
+        this.setState({
+            imageAspectRatio: divWidth / divHeight
+        });
+    }
+
+    /**
+     * Updates the image size based on the new window size
+     * @author Owen Anderson
+     * 
+     * @returns {void}
+     */
+    updateImageSize(){
+        //If the image has loaded in it's aspect ratio
+        if(this.state.imageAspectRatio !== -1){
+            let windowWidth = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+            let windowHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+    
+            //Test if making the div width equal to window width will work
+            let imageWidth = windowWidth - this.extraWidth;
+            let divHeight = (imageWidth / this.state.imageAspectRatio) + this.extraHeight;
+            if(divHeight <= windowHeight){
+                this.slideShowContainer.style.width = windowWidth + "px";
+                this.slideShowContainer.style.height = divHeight + "px";
+            } else {
+                //If it did not make the div height equal to window height
+                let imageHeight = windowHeight - this.extraHeight;
+                let divWidth = (imageHeight * this.state.imageAspectRatio) + this.extraWidth;
+
+                this.slideShowContainer.style.height = windowHeight + "px";
+                this.slideShowContainer.style.width = divWidth + "px";
+            }
+        }
     }
 
     /**
@@ -78,7 +144,7 @@ export class SlideShow extends React.Component{
 
         //If the currentIndex var is outside the range stop and just in the case that it's the first state, 
         //set first to false
-        if(this.__isIndexOutOfRange(currentIndex + 1)){
+        if(this.isIndexOutOfRange(currentIndex + 1)){
             this.setState({
                 first: false
             });
@@ -165,7 +231,7 @@ export class SlideShow extends React.Component{
         }
 
         //If the currentIndex var is outside the range stop the update
-        if(this.__isIndexOutOfRange(currentIndex - 1)){
+        if(this.isIndexOutOfRange(currentIndex - 1)){
             this.setState({
                 first: false
             });
@@ -192,7 +258,7 @@ export class SlideShow extends React.Component{
      * 
      * @returns {boolean} - Weather or not its in the range of the list
      */
-    __isIndexOutOfRange(index){
+    isIndexOutOfRange(index){
         if(index == null || this.props.images.length <= index || 0 > index){
             return true;
         }else{

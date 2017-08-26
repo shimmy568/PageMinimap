@@ -1,2 +1,2 @@
-# PageMinimap
-A mini map like in sublime text or visual studio code but for the websites, pretty cool huh?
+# Slick Photo Gallery
+Just a basic photo gallery thing built in react

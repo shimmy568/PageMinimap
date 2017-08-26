@@ -58,4 +58,5 @@ typings/
 .env
 
 # webpack shit
-dist/bundle.js
+dist/*.js
+dist/*.map

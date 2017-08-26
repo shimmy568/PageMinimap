@@ -1,14 +1,58 @@
 $className: '.rGEIdPsvTA';
+$buttonBackgroundColor: #BDBDBD;
+$uiBackgroundColor: lightgray;
+$uiBorderColor: gray;
+$mainContainerPadding: 10px;
 
-#{$className}{
+#{$className}:not(.fullscreen){
     width: 100%;
-    padding: 10px;
-    background-color: lightgray;
+}
+#{$className} {
+    padding: $mainContainerPadding;
+    background-color: $uiBackgroundColor;
     border-style: solid;
     border-width: 1px;
     border-radius: 5px;
-    border-color: gray;
-    img{
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    border-color: $uiBorderColor;
+    img {
         width: 100%;
     }
+    div.buttonContainer {
+        margin: auto;
+        width: fit-content;
+    }
+    div.numberReadout {
+        display: inline-block;
+        font-size: 26px;
+    }
+    button {
+        border-style: solid;
+        background-color: $buttonBackgroundColor;
+        border-color: rgba(255, 255, 255, 0.00);
+        padding: 0px;
+        border-width: 1px;
+        margin: 0px 10px;
+        margin-bottom: 10px;
+        padding: 3px;
+        outline: none;
+    }
+    button:hover {
+        background-color: darken($buttonBackgroundColor, 10);
+        border-color: $uiBorderColor;
+    }
+    button:focus {
+        background-color: darken($buttonBackgroundColor, 10);
+        border-color: $uiBorderColor;
+    }
+}
+
+#{$className}.fullscreen {
+    position: fixed;
+    width: -webkit-fill-available;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
