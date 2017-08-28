@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Next from "./assets/Next.svg";
-import Previous from "./assets/Previous.svg";
+import Next from './assets/Next.svg';
+import Previous from './assets/Previous.svg';
 
 import './SlideShow.scss';
 
@@ -16,8 +16,10 @@ export class SlideShow extends React.Component{
 
     /**
      * The default constructor for the SlideShow component
+     * 
+     * @param {any} props - The properties for the slideshow
      */
-    constructor(){
+    constructor(props){
         super();
         this.className = 'rGEIdPsvTA';
 
@@ -25,14 +27,14 @@ export class SlideShow extends React.Component{
         this.cooldownDuration = 300; //How long before the user can switch images agian in ms
 
         this.state = {
-            currentImageIndex: 0,
+            currentImageIndex: props.startIndex,
             first: true,
             imageAspectRatio: -1 //Base value untill it gets set for the first time
         };
 
         //vars used for getting the aspect ratio of the div with an image in it
-        this.extraWidth = (11 * 2); //10px for padding on left and right and border width
-        this.extraHeight = 42 + (11 * 2); //42 is the height of the buttons above
+        this.extraWidthPadding = (11 * 2); //10px for padding on left and right and border width
+        this.extraHeightPadding = 42 + (11 * 2); //42 is the height of the buttons above
     }
 
     /**
@@ -47,33 +49,33 @@ export class SlideShow extends React.Component{
 
         let classValue = this.className;
         if(this.props.fullscreen){
-            classValue += " fullscreen";
+            classValue += ' fullscreen';
         }
 
-        let curIndex;
+        /* let curIndex;
         if(this.state.first && !this.isIndexOutOfRange(this.props.startIndex)){
             curIndex = this.props.startIndex;
         }else{
             curIndex = this.state.currentImageIndex;
-        }
+        } */
 
-        let imageSrc = this.props.images[curIndex];
+        let imageSrc = this.props.images[this.state.currentImageIndex];
 
         let fullscreenOnLoadEvent;
         if(this.props.fullscreen){
             //If its the first time for aspect ratio set
-            if(this.slideShowContainer != null && this.slideShowContainer.style.width === "" && this.state.imageAspectRatio !== -1){
+            if(this.slideShowContainer != null && this.state.imageAspectRatio !== -1){
                 this.updateImageSize();
             }
             fullscreenOnLoadEvent = this.updateAspectRatio.bind(this);
-            window.addEventListener("resize", this.updateImageSize.bind(this));
+            window.addEventListener('resize', this.updateImageSize.bind(this));
         }
 
         return(
-            <div ref={(input) => {this.slideShowContainer = input;}} className={classValue} tabIndex="99999" onKeyDown={this.keyDownEventHandler.bind(this)} onKeyUp={this.resetImageChangeCooldown.bind(this)}>
-                <div className="buttonContainer">
+            <div ref={(input) => {this.slideShowContainer = input;}} className={classValue} tabIndex='99999' onKeyDown={this.keyDownEventHandler.bind(this)} onKeyUp={this.resetImageChangeCooldown.bind(this)}>
+                <div className='buttonContainer'>
                     <button onClick={this.previousImage.bind(this)}><Previous width={24} height={24}/></button>
-                    <div className="numberReadout">{curIndex + 1}/{this.props.images.length}</div>
+                    <div className='numberReadout'>{this.state.currentImageIndex + 1}/{this.props.images.length}</div>
                     <button onClick={this.nextImage.bind(this)}><Next width={24} height={24}/></button>
                 </div>
                 <img src={imageSrc} onLoad={fullscreenOnLoadEvent} onClick={this.nextImage.bind(this)}/>
@@ -88,7 +90,7 @@ export class SlideShow extends React.Component{
      * @returns {void}
      */
     updateAspectRatio(){
-        let loadedImage = this.slideShowContainer.getElementsByTagName("IMG")[0];
+        let loadedImage = this.slideShowContainer.getElementsByTagName('IMG')[0];
 
 
         let divWidth = loadedImage.getBoundingClientRect().width;
@@ -111,18 +113,18 @@ export class SlideShow extends React.Component{
             let windowHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
     
             //Test if making the div width equal to window width will work
-            let imageWidth = windowWidth - this.extraWidth;
-            let divHeight = (imageWidth / this.state.imageAspectRatio) + this.extraHeight;
+            let imageWidth = windowWidth - this.extraWidthPadding;
+            let divHeight = (imageWidth / this.state.imageAspectRatio) + this.extraHeightPadding;
             if(divHeight <= windowHeight){
-                this.slideShowContainer.style.width = windowWidth + "px";
-                this.slideShowContainer.style.height = divHeight + "px";
+                this.slideShowContainer.style.width = windowWidth + 'px';
+                this.slideShowContainer.style.height = divHeight + 'px';
             } else {
                 //If it did not make the div height equal to window height
-                let imageHeight = windowHeight - this.extraHeight;
-                let divWidth = (imageHeight * this.state.imageAspectRatio) + this.extraWidth;
+                let imageHeight = windowHeight - this.extraHeightPadding;
+                let divWidth = (imageHeight * this.state.imageAspectRatio) + this.extraWidthPadding;
 
-                this.slideShowContainer.style.height = windowHeight + "px";
-                this.slideShowContainer.style.width = divWidth + "px";
+                this.slideShowContainer.style.height = windowHeight + 'px';
+                this.slideShowContainer.style.width = divWidth + 'px';
             }
         }
     }

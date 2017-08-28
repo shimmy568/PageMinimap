@@ -51,7 +51,6 @@ $mainContainerPadding: 10px;
 
 #{$className}.fullscreen {
     position: fixed;
-    width: -webkit-fill-available;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);

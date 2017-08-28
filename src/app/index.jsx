@@ -3,8 +3,8 @@ import ReactDOM from 'react-dom';
 
 import './index.scss';
 
-//import { Gallery } from './components/Gallery/Gallery.jsx';
-import { SlideShow } from './components/SlideShow/SlideShow.jsx';
+import { Gallery } from './components/Gallery/Gallery.jsx';
+// import { SlideShow } from './components/SlideShow/SlideShow.jsx';
 
 let imageList = [
     './images/image0.png',
@@ -17,4 +17,4 @@ let imageList = [
 
 
 ReactDOM.render(
-    <div id="container"><SlideShow fullscreen={false} images={imageList}></SlideShow></div>, document.getElementById('root'));
+    <div id="container"><Gallery imageList={imageList}/></div>, document.getElementById('root'));

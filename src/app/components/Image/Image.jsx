@@ -25,8 +25,14 @@ export class Image extends React.Component {
      * @returns {JSX.Element} - The rendered content for the Image component
      */
     render(){
-        let indexOfStart = this.props.baseUrl.indexOf('*');
-        let imgSrc = this.props.baseUrl.substring(0, indexOfStart) + this.props.index + this.props.baseUrl.substring(indexOfStart + 1);
+        
+        let imgSrc;
+        if(this.props.src != null){
+            imgSrc = this.props.src;
+        }else if(this.props.baseUrl != null){
+            let indexOfStart = this.props.baseUrl.indexOf('*');
+            imgSrc = this.props.baseUrl.substring(0, indexOfStart) + this.props.index + this.props.baseUrl.substring(indexOfStart + 1);
+        }
 
         let classAttr = this.className;
         if(this.state.focused){
@@ -36,11 +42,12 @@ export class Image extends React.Component {
         return(<div className={classAttr} ref={(img) => {
             this.imageBody = img;
         }}><img src={imgSrc} onLoad={() => {
-            if(this.props.callback != null){
-                this.props.callback();
+            if(this.props.onLoadCallback != null){
+                this.props.onLoadCallback(true);
             }
         }} onError={() => {
-            if(this.props.callback != null){
+            if(this.props.onLoadCallback != null){
+                this.props.onLoadCallback(false);                
                 this.imageBody.remove();
             }
         }} onClick={this.imageOnClickEvent.bind(this)}/></div>);
@@ -58,7 +65,8 @@ export class Image extends React.Component {
 
 Image.propTypes = {
     baseUrl: PropTypes.string,
+    src: PropTypes.string,
     index: PropTypes.number,
-    callback: PropTypes.func,
+    onLoadCallback: PropTypes.func,
     focusImage: PropTypes.func
 };
