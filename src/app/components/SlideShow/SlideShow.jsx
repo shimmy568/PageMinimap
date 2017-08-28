@@ -107,6 +107,13 @@ export class SlideShow extends React.Component{
      * @returns {void}
      */
     updateImageSize(){
+
+        //Slideshow is gone :c remove event listener
+        if(this.slideShowContainer == null){
+            window.removeEventListener("resize", this.updateImageSize.bind(this));
+            return;
+        }
+
         //If the image has loaded in it's aspect ratio
         if(this.state.imageAspectRatio !== -1){
             let windowWidth = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);

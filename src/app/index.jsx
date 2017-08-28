@@ -12,9 +12,10 @@ let imageList = [
     './images/image2.png',
     './images/image3.png',
     './images/image4.png',
-    './images/image5.png'
+    './images/image5.png',
+    './images/image6.png'
 ];
 
 
 ReactDOM.render(
-    <div id="container"><Gallery imageList={imageList}/></div>, document.getElementById('root'));
+    <div id="container"><Gallery thumbAspectRatio={1} imageList={imageList}/></div>, document.getElementById('root'));

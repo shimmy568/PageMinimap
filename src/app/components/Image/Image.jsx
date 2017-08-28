@@ -25,7 +25,6 @@ export class Image extends React.Component {
      * @returns {JSX.Element} - The rendered content for the Image component
      */
     render(){
-        
         let imgSrc;
         if(this.props.src != null){
             imgSrc = this.props.src;
@@ -39,9 +38,14 @@ export class Image extends React.Component {
             classAttr += ' focused';
         }
 
+        if(this.props.aspectRatio != null){
+            window.addEventListener('resize', this.maintainAspectRatio.bind(this));
+        }
+
         return(<div className={classAttr} ref={(img) => {
             this.imageBody = img;
         }}><img src={imgSrc} onLoad={() => {
+            this.maintainAspectRatio();
             if(this.props.onLoadCallback != null){
                 this.props.onLoadCallback(true);
             }
@@ -61,6 +65,25 @@ export class Image extends React.Component {
     imageOnClickEvent(){
         this.props.focusImage(this.props.index);
     }
+
+    /**
+     * Keeps the aspect ratio constant on window resize
+     * @author Owen Anderson
+     * 
+     * @returns {void}
+     */
+    maintainAspectRatio(){
+        //remove the event listener if the component no longer is in the plane of exsistence
+        if(this.imageBody == null){
+            window.removeEventListener('resize', this.maintainAspectRatio.bind(this));
+        }
+
+        let width = this.imageBody.getBoundingClientRect().width;
+        this.imageBody.style.height = (width / this.props.aspectRatio) + 'px';
+
+        this.imageBody.firstChild.style.width = width + 'px';
+        this.imageBody.firstChild.style.height = (width / this.props.aspectRatio) + 'px';
+    }
 }
 
 Image.propTypes = {
@@ -68,5 +91,6 @@ Image.propTypes = {
     src: PropTypes.string,
     index: PropTypes.number,
     onLoadCallback: PropTypes.func,
-    focusImage: PropTypes.func
+    focusImage: PropTypes.func,
+    aspectRatio: PropTypes.number
 };

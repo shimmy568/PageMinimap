@@ -39,6 +39,7 @@ export class Gallery extends React.Component {
                 let src = this.generateSrc(this.props.dir, i);
                 children.push(<Image
                     key={'image' + i}
+                    aspectRatio={this.props.thumbAspectRatio}
                     focusImage={this.focusImage.bind(this)}
                     baseUrl={this.props.dir}
                     index={i}/>
@@ -47,6 +48,7 @@ export class Gallery extends React.Component {
             }
             children.push(<Image 
                 key={'image' + this.state.loadedImages}
+                aspectRatio={this.props.thumbAspectRatio}
                 focusImage={this.focusImage.bind(this)}
                 baseUrl={this.props.dir} index={this.state.loadedImages}
                 onLoadCallback={this.imageCallback.bind(this)}/>
@@ -56,6 +58,7 @@ export class Gallery extends React.Component {
             for(let i = 0; i < loadedImageSrcList.length; i++){
                 children.push(<Image
                     key={'image' + i}
+                    aspectRatio={this.props.thumbAspectRatio}
                     focusImage={this.focusImage.bind(this)}
                     src={loadedImageSrcList[i]}
                     index={i}/>
@@ -151,5 +154,6 @@ export class Gallery extends React.Component {
 
 Gallery.propTypes = {
     dir: PropTypes.string,
-    imageList: PropTypes.arrayOf(PropTypes.string)
+    imageList: PropTypes.arrayOf(PropTypes.string),
+    thumbAspectRatio: PropTypes.number
 };

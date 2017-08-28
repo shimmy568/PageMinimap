@@ -1,24 +1,18 @@
-$imagePrefix: '.mYx5yS5nJo';
-#{$imagePrefix} {
+$className: '.mYx5yS5nJo';
+
+#{$className} {
     flex-grow: 1;
-    flex-basis: 250px;
-    width: 300px;
-    padding: 10px;
-    border-style: solid;
-    border-color: grey;
-    background-color: lightgray;
-    border-width: 2px;
-    border-radius: 5px;
-    margin: 10px;
+    flex-basis: 300px;
+    margin: 5px;
+    overflow: hidden;
     img {
-        width: 100%;
-        .focused {
-            background-color: red;
-        }
+        object-fit: cover;
     }
 }
 
-#{$imagePrefix}:hover {
-    background-color: darken(lightgray, 10);
+#{$className}:hover {
+    outline-style: inset;
+    outline-color: gray;
+    outline-width: 1px;
     cursor: pointer;
 }
