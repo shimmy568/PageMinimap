@@ -23,6 +23,7 @@ export class Gallery extends React.Component {
             focusedImage: -1,
             loaded: props.imageList != null
         };
+        this.first = true;
     }
 
     /**
@@ -31,7 +32,7 @@ export class Gallery extends React.Component {
      * @returns {JSX.Element} - The rendered content for the component
      */
     render() {
-        
+
         let children = [];
         let loadedImageSrcList = [];        
         if(this.props.dir != null){
@@ -89,6 +90,7 @@ export class Gallery extends React.Component {
      * @returns {void}
      */
     imageCallback(result){
+        this.triggerResizeEvent();
         if(result){
             this.setState({
                 loadedImages: this.state.loadedImages + 1
@@ -98,6 +100,19 @@ export class Gallery extends React.Component {
                 loaded: true
             });
         }
+    }
+
+    /**
+     * Triggers the resize event, used to make sure the
+     * images keep aspect ratio when loaded using dir
+     * @author Owen Anderson
+     * 
+     * @returns {void}
+     */
+    triggerResizeEvent(){
+        let event = document.createEvent('UIEvent');
+        event.initEvent('resize', true, false);
+        window.dispatchEvent(event);
     }
 
     /**

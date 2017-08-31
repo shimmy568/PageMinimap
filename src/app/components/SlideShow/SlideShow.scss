@@ -1,51 +1,62 @@
 $className: '.rGEIdPsvTA';
-$buttonBackgroundColor: #BDBDBD;
-$uiBackgroundColor: lightgray;
-$uiBorderColor: gray;
-$mainContainerPadding: 10px;
-
-#{$className}:not(.fullscreen){
+$buttonBackgroundColor: rgba(233, 233, 233, 0.30);
+$uiBorderColor: #000000;
+#{$className}:not(.fullscreen) {
     width: 100%;
 }
+
 #{$className} {
-    padding: $mainContainerPadding;
-    background-color: $uiBackgroundColor;
-    border-style: solid;
-    border-width: 1px;
-    border-radius: 5px;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
-    border-color: $uiBorderColor;
     img {
         width: 100%;
     }
-    div.buttonContainer {
-        margin: auto;
-        width: fit-content;
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    transform: translate(0, -50%);
+    button.left {
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translate(0, -50%);
     }
-    div.numberReadout {
-        display: inline-block;
-        font-size: 26px;
+    button.right {
+        position: absolute;
+        right: 0;
+        top: 50%;
+        transform: translate(0, -50%);
     }
     button {
+        border-radius: 99999px;
         border-style: solid;
         background-color: $buttonBackgroundColor;
-        border-color: rgba(255, 255, 255, 0.00);
+        border-color: $uiBorderColor;
         padding: 0px;
         border-width: 1px;
-        margin: 0px 10px;
+        margin: 0px 30px;
         margin-bottom: 10px;
         padding: 3px;
         outline: none;
     }
     button:hover {
-        background-color: darken($buttonBackgroundColor, 10);
-        border-color: $uiBorderColor;
+        background-color: darken($buttonBackgroundColor, 20);
     }
     button:focus {
-        background-color: darken($buttonBackgroundColor, 10);
+        background-color: darken($buttonBackgroundColor, 20);
+    }
+    .progressCounter{
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translate(-50%, 0);
+        background-color: $buttonBackgroundColor;
+        border-style: solid;
+        border-width: 1px;
         border-color: $uiBorderColor;
+        border-radius: 0px 0px 5px 5px;
+        padding: 0px 5px;
     }
 }
 

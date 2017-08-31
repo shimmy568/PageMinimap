@@ -51,8 +51,8 @@ export class Image extends React.Component {
             }
         }} onError={() => {
             if(this.props.onLoadCallback != null){
-                this.props.onLoadCallback(false);                
                 this.imageBody.remove();
+                this.props.onLoadCallback(false);                
             }
         }} onClick={this.imageOnClickEvent.bind(this)}/></div>);
     }
@@ -76,6 +76,11 @@ export class Image extends React.Component {
         //remove the event listener if the component no longer is in the plane of exsistence
         if(this.imageBody == null){
             window.removeEventListener('resize', this.maintainAspectRatio.bind(this));
+        }
+
+        //Dont update aspect ratio dims if the image wasnt provided one
+        if(this.props.aspectRatio == null){
+            return;
         }
 
         let width = this.imageBody.getBoundingClientRect().width;

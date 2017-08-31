@@ -27,14 +27,11 @@ export class SlideShow extends React.Component{
         this.cooldownDuration = 300; //How long before the user can switch images agian in ms
 
         this.state = {
-            currentImageIndex: props.startIndex,
+            currentImageIndex: props.startIndex || 0,
             first: true,
             imageAspectRatio: -1 //Base value untill it gets set for the first time
         };
 
-        //vars used for getting the aspect ratio of the div with an image in it
-        this.extraWidthPadding = (11 * 2); //10px for padding on left and right and border width
-        this.extraHeightPadding = 42 + (11 * 2); //42 is the height of the buttons above
     }
 
     /**
@@ -44,6 +41,10 @@ export class SlideShow extends React.Component{
      */
     render(){
 
+        if(this.props.images == null){
+            throw new Error('Images prop must not be null');
+        }
+
         //Set default values
         this.cooldownDuration = this.props.imageSwitchCoolDownTime || 300;
 
@@ -51,13 +52,6 @@ export class SlideShow extends React.Component{
         if(this.props.fullscreen){
             classValue += ' fullscreen';
         }
-
-        /* let curIndex;
-        if(this.state.first && !this.isIndexOutOfRange(this.props.startIndex)){
-            curIndex = this.props.startIndex;
-        }else{
-            curIndex = this.state.currentImageIndex;
-        } */
 
         let imageSrc = this.props.images[this.state.currentImageIndex];
 
@@ -73,11 +67,9 @@ export class SlideShow extends React.Component{
 
         return(
             <div ref={(input) => {this.slideShowContainer = input;}} className={classValue} tabIndex='99999' onKeyDown={this.keyDownEventHandler.bind(this)} onKeyUp={this.resetImageChangeCooldown.bind(this)}>
-                <div className='buttonContainer'>
-                    <button onClick={this.previousImage.bind(this)}><Previous width={24} height={24}/></button>
-                    <div className='numberReadout'>{this.state.currentImageIndex + 1}/{this.props.images.length}</div>
-                    <button onClick={this.nextImage.bind(this)}><Next width={24} height={24}/></button>
-                </div>
+                <button className='left' onClick={this.previousImage.bind(this)}><Previous width={50} height={50}/></button>
+                <button className='right' onClick={this.nextImage.bind(this)}><Next width={50} height={50}/></button>
+                <div className='progressCounter'>{' ' + this.state.currentImageIndex + '/' + this.props.images.length + ' '}</div>
                 <img src={imageSrc} onLoad={fullscreenOnLoadEvent} onClick={this.nextImage.bind(this)}/>
             </div>
         );
@@ -118,22 +110,63 @@ export class SlideShow extends React.Component{
         if(this.state.imageAspectRatio !== -1){
             let windowWidth = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
             let windowHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
-    
+
             //Test if making the div width equal to window width will work
-            let imageWidth = windowWidth - this.extraWidthPadding;
-            let divHeight = (imageWidth / this.state.imageAspectRatio) + this.extraHeightPadding;
+            let imageWidth = windowWidth;
+            let divHeight = (imageWidth / this.state.imageAspectRatio);
             if(divHeight <= windowHeight){
                 this.slideShowContainer.style.width = windowWidth + 'px';
                 this.slideShowContainer.style.height = divHeight + 'px';
             } else {
                 //If it did not make the div height equal to window height
-                let imageHeight = windowHeight - this.extraHeightPadding;
-                let divWidth = (imageHeight * this.state.imageAspectRatio) + this.extraWidthPadding;
+                let imageHeight = windowHeight;
+                let divWidth = (imageHeight * this.state.imageAspectRatio);
 
                 this.slideShowContainer.style.height = windowHeight + 'px';
                 this.slideShowContainer.style.width = divWidth + 'px';
             }
+
+            this.setUIElementSize();
         }
+    }
+
+    /**
+     * Sets the size of the ui elements in the slideshow
+     * @author Owen Anderson
+     * 
+     * @returns {void}
+     */
+    setUIElementSize(){
+        let image = this.slideShowContainer.getElementsByTagName('IMG')[0];
+
+        //Get the smaller of the two dimensions for the image
+        let smallerDim;
+        if(image.getBoundingClientRect().width <= image.getBoundingClientRect().height){
+            smallerDim = image.getBoundingClientRect().width;
+        }else{
+            smallerDim = image.getBoundingClientRect().height;
+        }
+
+        //set the next and prev buttons dimensions
+        let btns = this.slideShowContainer.getElementsByTagName('BUTTON');
+        for(let i = 0; i < btns.length; i++){
+            if(smallerDim * 0.1 > 50){
+                btns[i].firstChild.style.width = '50px';
+                btns[i].firstChild.style.height = '50px';
+            }else{
+                btns[i].firstChild.style.width = smallerDim * 0.1 + 'px';
+                btns[i].firstChild.style.height = smallerDim * 0.1 + 'px';
+            }
+        }
+
+        //set the dimensions for the progress tracker
+        let el = this.slideShowContainer.getElementsByClassName('progressCounter')[0];
+        if(smallerDim * 0.0048 > 2.5){
+            el.style.fontSize = '2.5em';
+        }else{
+            el.style.fontSize = (smallerDim * 0.0048) + 'em';            
+        }
+        
     }
 
     /**
