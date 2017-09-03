@@ -24,7 +24,9 @@ export class SlideShow extends React.Component{
         this.className = 'rGEIdPsvTA';
 
         this.startingTime = 0;
-        this.cooldownDuration = 300; //How long before the user can switch images agian in ms
+        this.imageSwitchTimeoutID; //How long before the user can switch images agian in ms
+        this.lastProgressionTime = 0;
+        this.progressionCooldown = 300; //Time before the user can go to the next image using the left and right click buttons
 
         this.state = {
             currentImageIndex: props.startIndex || 0,
@@ -65,11 +67,15 @@ export class SlideShow extends React.Component{
             window.addEventListener('resize', this.updateImageSize.bind(this));
         }
 
+        if(this.props.imageSwitchCoolDownTime != null && this.imageSwitchTimeoutID == null){
+            this.imageSwitchTimeoutID = window.setTimeout(this.progressSlideshow.bind(this), this.props.imageSwitchCoolDownTime);
+        }
+
         return(
             <div ref={(input) => {this.slideShowContainer = input;}} className={classValue} tabIndex='99999' onKeyDown={this.keyDownEventHandler.bind(this)} onKeyUp={this.resetImageChangeCooldown.bind(this)}>
                 <button className='left' onClick={this.previousImage.bind(this)}><Previous width={50} height={50}/></button>
                 <button className='right' onClick={this.nextImage.bind(this)}><Next width={50} height={50}/></button>
-                <div className='progressCounter'>{' ' + this.state.currentImageIndex + '/' + this.props.images.length + ' '}</div>
+                <div className='progressCounter'>{' ' + (this.state.currentImageIndex + 1) + '/' + this.props.images.length + ' '}</div>
                 <img src={imageSrc} onLoad={fullscreenOnLoadEvent} onClick={this.nextImage.bind(this)}/>
             </div>
         );
@@ -108,8 +114,8 @@ export class SlideShow extends React.Component{
 
         //If the image has loaded in it's aspect ratio
         if(this.state.imageAspectRatio !== -1){
-            let windowWidth = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
-            let windowHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+            let windowWidth = window.innerWidth || 0;
+            let windowHeight = window.innerHeight || 0;
 
             //Test if making the div width equal to window width will work
             let imageWidth = windowWidth;
@@ -173,9 +179,11 @@ export class SlideShow extends React.Component{
      * Sets the slideshow to show the next image if there is one
      * @author Owen Anderson
      * 
+     * @param {MouseEvent} e - The event passed in, used to check if this was a button thing
+     * 
      * @returns {void}
      */
-    nextImage(){
+    nextImage(e){
         
         //If its the first time the current index has been changed dont use the state value
         //instead use the user set props value
@@ -191,13 +199,17 @@ export class SlideShow extends React.Component{
                 first: false
             });
             return;
+        }else{
+            if(!(e != null && new Date().getTime() - this.lastProgressionTime <= this.progressionCooldown)){
+                //Update the state
+                this.lastProgressionTime = new Date().getTime(); //save the time
+                this.setState({
+                    currentImageIndex: currentIndex + 1,
+                    first: false
+                });
+            }                
         }
 
-        //Update the state
-        this.setState({
-            currentImageIndex: currentIndex + 1,
-            first: false
-        });
 
         //Call the user provided next image func if provided
         if(this.props.nextImage != null){
@@ -261,9 +273,11 @@ export class SlideShow extends React.Component{
      * Sets the slideshow to show the previos image if there is one
      * @author Owen Anderson
      * 
+     * @param {MouseEvent} e - Used to check if the function was called from an mouse event
+     * 
      * @returns {void}
      */
-    previousImage(){
+    previousImage(e){
         
         //If its the first time the current index has been changed dont use the state value
         //instead use the user set props value
@@ -277,14 +291,17 @@ export class SlideShow extends React.Component{
             this.setState({
                 first: false
             });
-            return;
+        }else{
+            if(!(e != null && new Date().getTime() - this.lastProgressionTime <= this.progressionCooldown)){
+                //Update the state
+                this.lastProgressionTime = new Date().getTime();
+                this.setState({
+                    currentImageIndex: currentIndex - 1,
+                    first: false
+                });
+            }
         }
 
-        //Update the state
-        this.setState({
-            currentImageIndex: currentIndex - 1,
-            first: false
-        });
 
         //Call the user provided next image func if provided
         if(this.props.nextImage != null){
@@ -306,6 +323,25 @@ export class SlideShow extends React.Component{
         }else{
             return false;
         }
+    }
+
+    /**
+     * Used to progress the timeout for the slideshow used for auto progression
+     * for the slides
+     * @author Owen Anderson
+     * 
+     * @returns {void}
+     */
+    progressSlideshow(){
+        if(this.props.images.length - 1 === this.state.currentImageIndex){
+            this.setState({
+                currentImageIndex: 0,
+                first: false
+            });
+        }else{
+            this.nextImage();
+        }
+        window.setTimeout(this.progressSlideshow.bind(this), this.props.imageSwitchCoolDownTime);
     }
 }
 

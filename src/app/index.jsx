@@ -3,10 +3,10 @@ import ReactDOM from 'react-dom';
 
 import './index.scss';
 
-import { Gallery } from './components/Gallery/Gallery.jsx';
-//import { SlideShow } from './components/SlideShow/SlideShow.jsx';
+//import { Gallery } from './components/Gallery/Gallery.jsx';
+import { SlideShow } from './components/SlideShow/SlideShow.jsx';
 
-/* let imageList = [
+let imageList = [
     './images/image0.png',
     './images/image1.png',
     './images/image2.png',
@@ -14,8 +14,9 @@ import { Gallery } from './components/Gallery/Gallery.jsx';
     './images/image4.png',
     './images/image5.png',
     './images/image6.png'
-]; */
+];
 
-// <SlideShow fullscreen={true} images={imageList}/>
+// 
+// <Gallery thumbAspectRatio={1} imageSwitchCoolDownTime={1000} dir='./images/image*.png'/>
 ReactDOM.render(
-    <div id="container"><Gallery thumbAspectRatio={1} dir='./images/image*.png'/></div>, document.getElementById('root'));
+    <div id="container"><SlideShow fullscreen={true} imageSwitchCoolDownTime={10000} images={imageList}/></div>, document.getElementById('root'));
