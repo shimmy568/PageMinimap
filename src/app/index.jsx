@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 
 import './index.scss';
 
-//import { Gallery } from './components/Gallery/Gallery.jsx';
+import { Gallery } from './components/Gallery/Gallery.jsx';
 import { SlideShow } from './components/SlideShow/SlideShow.jsx';
 
 let imageList = [
@@ -19,4 +19,4 @@ let imageList = [
 // 
 // <Gallery thumbAspectRatio={1} imageSwitchCoolDownTime={1000} dir='./images/image*.png'/>
 ReactDOM.render(
-    <div id="container"><SlideShow fullscreen={true} imageSwitchCoolDownTime={10000} images={imageList}/></div>, document.getElementById('root'));
+    <div id="container"><Gallery dir='./images/image*.png' focusImageOnClick={true} /></div>, document.getElementById('root'));

@@ -33,9 +33,13 @@ export class Image extends React.Component {
             imgSrc = this.props.baseUrl.substring(0, indexOfStart) + this.props.index + this.props.baseUrl.substring(indexOfStart + 1);
         }
 
+
         let classAttr = this.className;
         if(this.state.focused){
             classAttr += ' focused';
+        }
+        if(this.props.onClick != null){
+            classAttr += ' foucsable';
         }
 
         if(this.props.aspectRatio != null){
@@ -63,7 +67,9 @@ export class Image extends React.Component {
      * @returns {void}
      */
     imageOnClickEvent(){
-        this.props.focusImage(this.props.index);
+        if(this.props.onClick != null){
+            this.props.onClick(this.props.index);        
+        }
     }
 
     /**
@@ -96,6 +102,6 @@ Image.propTypes = {
     src: PropTypes.string,
     index: PropTypes.number,
     onLoadCallback: PropTypes.func,
-    focusImage: PropTypes.func,
+    onClick: PropTypes.func,
     aspectRatio: PropTypes.number
 };

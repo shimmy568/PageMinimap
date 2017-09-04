@@ -7,10 +7,11 @@ $className: '.mYx5yS5nJo';
     overflow: hidden;
     img {
         object-fit: cover;
+        width: 100%;
     }
 }
 
-#{$className}:hover {
+#{$className}.foucsable:hover {
     outline-style: inset;
     outline-color: gray;
     outline-width: 1px;

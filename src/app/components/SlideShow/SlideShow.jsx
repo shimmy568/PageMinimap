@@ -31,7 +31,8 @@ export class SlideShow extends React.Component{
         this.state = {
             currentImageIndex: props.startIndex || 0,
             first: true,
-            imageAspectRatio: -1 //Base value untill it gets set for the first time
+            imageAspectRatio: -1, //Base value untill it gets set for the first time
+            progressDisplayType: props.progressDisplayType || "fraction"
         };
 
     }
@@ -71,11 +72,23 @@ export class SlideShow extends React.Component{
             this.imageSwitchTimeoutID = window.setTimeout(this.progressSlideshow.bind(this), this.props.imageSwitchCoolDownTime);
         }
 
+        //Code to set the progress tracker type
+        let progressTracker;
+        switch(this.state.progressDisplayType) {
+            case "fraction":{
+                progressTracker = <div className='fractionTracker'>{' ' + (this.state.currentImageIndex + 1) + '/' + this.props.images.length + ' '}</div>;
+                break;
+            }
+            default:{
+                throw new Error("That is not a valid progress display type");
+            }
+        }
+
         return(
             <div ref={(input) => {this.slideShowContainer = input;}} className={classValue} tabIndex='99999' onKeyDown={this.keyDownEventHandler.bind(this)} onKeyUp={this.resetImageChangeCooldown.bind(this)}>
                 <button className='left' onClick={this.previousImage.bind(this)}><Previous width={50} height={50}/></button>
                 <button className='right' onClick={this.nextImage.bind(this)}><Next width={50} height={50}/></button>
-                <div className='progressCounter'>{' ' + (this.state.currentImageIndex + 1) + '/' + this.props.images.length + ' '}</div>
+                <div className='progressTracker'>{progressTracker}</div>
                 <img src={imageSrc} onLoad={fullscreenOnLoadEvent} onClick={this.nextImage.bind(this)}/>
             </div>
         );
@@ -166,11 +179,17 @@ export class SlideShow extends React.Component{
         }
 
         //set the dimensions for the progress tracker
-        let el = this.slideShowContainer.getElementsByClassName('progressCounter')[0];
-        if(smallerDim * 0.0048 > 2.5){
-            el.style.fontSize = '2.5em';
-        }else{
-            el.style.fontSize = (smallerDim * 0.0048) + 'em';            
+        switch(this.state.progressDisplayType){
+            case 'fraction': {
+                let el = this.slideShowContainer.getElementsByClassName('fractionTracker')[0];
+                if(smallerDim * 0.0048 > 2.5){
+                    el.style.fontSize = '2.5em';
+                }else{
+                    el.style.fontSize = (smallerDim * 0.0048) + 'em';            
+                }
+                break;
+            }
+                
         }
         
     }
@@ -351,5 +370,6 @@ SlideShow.propTypes = {
     startIndex: PropTypes.number,
     nextImage: PropTypes.func,
     previousImage: PropTypes.func,
-    imageSwitchCoolDownTime: PropTypes.number
+    imageSwitchCoolDownTime: PropTypes.number,
+    progressDisplayType: PropTypes.string
 };

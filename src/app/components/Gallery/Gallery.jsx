@@ -33,6 +33,13 @@ export class Gallery extends React.Component {
      */
     render() {
 
+        let focusImageFunc;
+        if(this.props.focusImageOnClick === true || this.props.focusImageOnClick == null){
+            focusImageFunc = this.focusImage.bind(this);
+        }else{
+            focusImageFunc = null;
+        }
+
         let children = [];
         let loadedImageSrcList = [];        
         if(this.props.dir != null){
@@ -41,7 +48,7 @@ export class Gallery extends React.Component {
                 children.push(<Image
                     key={'image' + i}
                     aspectRatio={this.props.thumbAspectRatio}
-                    focusImage={this.focusImage.bind(this)}
+                    onClick={focusImageFunc}
                     baseUrl={this.props.dir}
                     index={i}/>
                 );
@@ -50,7 +57,7 @@ export class Gallery extends React.Component {
             children.push(<Image 
                 key={'image' + this.state.loadedImages}
                 aspectRatio={this.props.thumbAspectRatio}
-                focusImage={this.focusImage.bind(this)}
+                onClick={focusImageFunc}
                 baseUrl={this.props.dir} index={this.state.loadedImages}
                 onLoadCallback={this.imageCallback.bind(this)}/>
             );    
@@ -60,7 +67,7 @@ export class Gallery extends React.Component {
                 children.push(<Image
                     key={'image' + i}
                     aspectRatio={this.props.thumbAspectRatio}
-                    focusImage={this.focusImage.bind(this)}
+                    onClick={focusImageFunc}
                     src={loadedImageSrcList[i]}
                     index={i}/>
                 );
@@ -170,5 +177,6 @@ export class Gallery extends React.Component {
 Gallery.propTypes = {
     dir: PropTypes.string,
     imageList: PropTypes.arrayOf(PropTypes.string),
-    thumbAspectRatio: PropTypes.number
+    thumbAspectRatio: PropTypes.number,
+    focusImageOnClick: PropTypes.bool
 };
