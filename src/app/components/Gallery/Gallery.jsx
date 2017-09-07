@@ -21,7 +21,8 @@ export class Gallery extends React.Component {
         this.state = {
             loadedImages: 0,
             focusedImage: -1,
-            loaded: props.imageList != null
+            loaded: props.imageList != null,
+            displayType: props.displayType || 'default'
         };
         this.first = true;
     }
@@ -33,6 +34,7 @@ export class Gallery extends React.Component {
      */
     render() {
 
+        //The setting for that allows the user to disable the ability to focus images
         let focusImageFunc;
         if(this.props.focusImageOnClick === true || this.props.focusImageOnClick == null){
             focusImageFunc = this.focusImage.bind(this);
@@ -40,6 +42,7 @@ export class Gallery extends React.Component {
             focusImageFunc = null;
         }
 
+        //Loads the images using either image list or dir
         let children = [];
         let loadedImageSrcList = [];        
         if(this.props.dir != null){
@@ -76,6 +79,8 @@ export class Gallery extends React.Component {
             throw new Error("Either dir or imageList must be set");
         }
 
+        //Create the slideshow for the focused element, will not show it unless
+        //all images are loaded.
         let focusedImage;
         if(this.state.focusedImage !== -1 && this.state.loaded){
             focusedImage = (
@@ -85,7 +90,13 @@ export class Gallery extends React.Component {
             );
         }
 
-        return (<div className={this.className}>{focusedImage}{children}</div>);
+        //Set the class name for the parent for the diffrent display types
+        let className = this.className;
+        if(this.state.displayType === 'grid'){
+            className += ' grid';
+        }
+
+        return (<div className={className}>{focusedImage}{children}</div>);
     }
 
     /**
@@ -171,6 +182,39 @@ export class Gallery extends React.Component {
             });
         }
     }
+
+    /**
+     * Adds all the css style to the images based off the data provided in gridData, 
+     * this function just edits them via the pointers
+     * @author Owen Anderson
+     * @throws When the gridData param is not rectangular
+     * 
+     * @param {JSX.Element} gallery - The list of images generated in render
+     * @param {Array<JSX.Element>} images - The the of image JSX elements that will be put in the gallery
+     * @param {GridData} gridData - The grid data object that was passed in
+     * 
+     * @returns {void}
+     */
+    processGridDataImages(gallery, images, gridData){
+
+        let gridWidth = gridData[0].length;
+        let gridHeight = gridData.length;
+
+        
+
+        for (let i = 0; i < gridData.length; i++) {
+            let row = gridData[i];
+            if(row.length !== gridWidth){
+                throw new Error('Grid data input must be rectangular');
+            }
+            for (let o = 0; o < row.length; o++) {
+                let cell = row[o];
+                let imageElement = images[cell.imageIndex];
+
+            }
+        }
+
+    }
 }
 
 
@@ -178,5 +222,7 @@ Gallery.propTypes = {
     dir: PropTypes.string,
     imageList: PropTypes.arrayOf(PropTypes.string),
     thumbAspectRatio: PropTypes.number,
-    focusImageOnClick: PropTypes.bool
+    focusImageOnClick: PropTypes.bool,
+    displayType: PropTypes.string,
+    gridData: PropTypes.arrayOf(PropTypes.object)
 };
