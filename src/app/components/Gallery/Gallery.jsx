@@ -195,7 +195,7 @@ export class Gallery extends React.Component {
      * 
      * @returns {void}
      */
-    processGridDataImages(gallery, images, gridData){
+    __processGridDataImages(gallery, images, gridData){
 
         let gridWidth = gridData[0].length;
         let gridHeight = gridData.length;
@@ -210,7 +210,7 @@ export class Gallery extends React.Component {
             for (let o = 0; o < row.length; o++) {
                 let cell = row[o];
                 let imageElement = images[cell.imageIndex];
-
+                
             }
         }
 
