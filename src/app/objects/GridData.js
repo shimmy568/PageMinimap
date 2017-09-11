@@ -20,7 +20,7 @@ export class GridData {
         this.colSizes = columSizes;
         this.rowSizes = rowSizes;
 
-        this.__convertNumbers();
+        this.__convertNumbers(indexs.length, indexs[0].length);
 
         this.imageStyleInfo = this.__convertIndexsToStyleInfo(indexs);
     }
@@ -29,24 +29,39 @@ export class GridData {
      * Converts the number values in colSizes and rowSizes to strings with the px suffex
      * @author Owen Anderson
      * 
+     * @param {number} rowNum - The number of rows in the grid
+     * @param {number} colNum - The number of columns in the grid
+     * 
      * @returns {void}
      */
-    __convertNumbers() {
+    __convertNumbers(rowNum, colNum) {
+
+        //Replace any missing values with auto for both rowsizes and colsizes
+        for(let i = 0; i < rowNum; i++){
+            if(this.rowSizes[i] == null){
+                this.rowSizes[i] = 'push';
+            }
+        }
+        for(let i = 0; i < colNum; i++){
+            if(this.colSizes[i] == null){
+                this.colSizes[i] = 'push';
+            }
+        }
+
+        //Convert all the row size values to string
+        for (let i = 0; i < this.rowSizes.length; i++) {
+            if (typeof this.rowSizes[i] === 'number') {
+                this.rowSizes[i] = this.rowSizes[i] + 'px';
+            } else if (typeof this.rowSizes[i] !== 'string') {
+                throw new Error('The colum sizes must be either a string or a number');
+            }
+        }
 
         //Convert all colsize values to string
         for (let i = 0; i < this.colSizes.length; i++) {
             if (typeof this.colSizes[i] === 'number') {
                 this.colSizes[i] = this.colSizes[i] + 'px';
             } else if (typeof this.colSizes[i] !== 'string') {
-                throw new Error('The colum sizes must be either a string or a number');
-            }
-        }
-
-        //Do the same for rows
-        for (let i = 0; i < this.rowSizes.length; i++) {
-            if (typeof this.rowSizes[i] === 'number') {
-                this.rowSizes[i] = this.rowSizes[i] + 'px';
-            } else if (typeof this.rowSizes[i] !== 'string') {
                 throw new Error('The colum sizes must be either a string or a number');
             }
         }
@@ -72,7 +87,7 @@ export class GridData {
                 throw new Error('The indexs data needs to be an rectangular 2D array');
             }
             for (let o = 0; o < indexs[i].length; i++) {
-                //TODO the do                
+                //TODO the do             
             }
         }
     }
@@ -92,23 +107,23 @@ export class GridData {
         let rectWidth = 0;
         let rectHeight = 0;
 
-        for(let y = rowNum; y < indexs.length; y++){
+        for (let y = rowNum; y < indexs.length; y++) {
             let curWidth = 0;
             //Check if we have reached the end of the rect
-            if(indexs[y][0] !== imageIndex){
+            if (indexs[y][0] !== imageIndex) {
                 break;
             }
-            for(let x = colNum; x < indexs[0].length; x++){
-                if(imageIndex !== indexs[y][x]){
+            for (let x = colNum; x < indexs[0].length; x++) {
+                if (imageIndex !== indexs[y][x]) {
                     break;
                 }
                 curWidth++;
             }
 
-            if(y === curWidth){
+            if (y === curWidth) {
                 //If this is the first row set the rectWidth value
                 rectWidth = curWidth;
-            } else if(rectWidth !== curWidth){ 
+            } else if (rectWidth !== curWidth) {
                 // If it is any other row make sure it's the same size as the first
                 throw new Error('The index data must only contains rectangles');
             }

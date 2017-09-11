@@ -17,6 +17,7 @@ export class ImageRectData{
      * @param {number} colEnd - The column that the image rect ends in
      */
     constructor(index, rowStart, rowEnd, colStart, colEnd){
+        this.index = index;
         this.rowStart = rowStart;
         this.rowEnd = rowEnd;
         this.colStart = colStart;
