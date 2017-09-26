@@ -20,6 +20,8 @@ export class GridData {
         this.colSizes = columSizes;
         this.rowSizes = rowSizes;
 
+        this.rectDatas = [];
+
         this.__convertNumbers(indexs.length, indexs[0].length);
 
         this.imageStyleInfo = this.__convertIndexsToStyleInfo(indexs);
@@ -39,12 +41,12 @@ export class GridData {
         //Replace any missing values with auto for both rowsizes and colsizes
         for(let i = 0; i < rowNum; i++){
             if(this.rowSizes[i] == null){
-                this.rowSizes[i] = 'push';
+                this.rowSizes[i] = 'auto';
             }
         }
         for(let i = 0; i < colNum; i++){
             if(this.colSizes[i] == null){
-                this.colSizes[i] = 'push';
+                this.colSizes[i] = 'auto';
             }
         }
 
@@ -79,15 +81,18 @@ export class GridData {
      * @returns {Array<object>} - The style data to be applied to the images
      */
     __convertIndexsToStyleInfo(indexs) {
-
         let indexsWidth = indexs[0].length;
 
         for (let i = 0; i < indexs.length; i++) {
             if (indexs[i].length !== indexsWidth) {
                 throw new Error('The indexs data needs to be an rectangular 2D array');
             }
-            for (let o = 0; o < indexs[i].length; i++) {
-                //TODO the do             
+            for (let o = 0; o < indexs[0].length; o++) {
+                if(indexs[i][o] !== -1){
+                    if(this.rectDatas[indexs[i][o]] == null ){
+                        this.rectDatas[indexs[i][o]] = this.__getDimOfRectInIndexs(indexs, i, o);
+                    }
+                }
             }
         }
     }
@@ -103,14 +108,15 @@ export class GridData {
      * @returns {ImageRectData} - An object containing the values for the image rect
      */
     __getDimOfRectInIndexs(indexs, rowNum, colNum) {
+        
         let imageIndex = indexs[rowNum][colNum];
-        let rectWidth = 0;
-        let rectHeight = 0;
-
+        let rectWidth = -1;
+        let rectHeight = -1;
+        
         for (let y = rowNum; y < indexs.length; y++) {
-            let curWidth = 0;
+            let curWidth = -1;
             //Check if we have reached the end of the rect
-            if (indexs[y][0] !== imageIndex) {
+            if (indexs[y][colNum] !== imageIndex) {
                 break;
             }
             for (let x = colNum; x < indexs[0].length; x++) {
@@ -119,8 +125,8 @@ export class GridData {
                 }
                 curWidth++;
             }
-
-            if (y === curWidth) {
+            
+            if (y === rowNum) {
                 //If this is the first row set the rectWidth value
                 rectWidth = curWidth;
             } else if (rectWidth !== curWidth) {
@@ -131,6 +137,7 @@ export class GridData {
         }
 
         //Create the rect data object and make sure everything is properly indexed for the css
+        
         let rectData = new ImageRectData(
             imageIndex,
             rowNum + 1,
@@ -139,5 +146,22 @@ export class GridData {
             colNum + (rectWidth + 1)
         );
         return rectData;
+    }
+
+    /**
+     * Gets the image data from the rect datas array with a given index
+     * @author Owen Anderson
+     * 
+     * @param {number} index - The index of the image data that you are getting
+     * 
+     * @returns {ImageRectData} - The rect data
+     */
+    getImageData(index){
+        for(let i = 0; i < this.rectDatas.length; i++){
+            if(index === this.rectDatas[i].index){
+                return this.rectDatas[i];
+            }
+        }
+        return null;
     }
 }

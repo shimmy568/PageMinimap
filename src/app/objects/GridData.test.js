@@ -2,13 +2,48 @@ import {
     GridData
 } from './GridData.js';
 
-test('Creates Grid Data Object', () => {
-    let indexs = [[0, 0, 0, 0, 0],
-                  [0, 1, 1, 1, 0],
-                  [0, 1, 1, 1, 0],
-                  [0, 1, 1, 1, 0],
-                  [0, 0, 0, 0, 0]];
-    let columSizes = ['auto'];
+let indexs = [
+    [0, 0, 1, 1, 1],
+    [0, 0, 1, 1, 1],
+    [0, 0, 1, 1, 1],
+    [0, 0, 2, 2, 2],
+    [0, 0, 2, 2, 2]
+];
+let columSizes = [50, '50px', '50px', 100, '30%'];
+let rowSizes = ['30%', 'auto', 150, '20px'];
 
-    let data = new GridData();
+//Basic test for the grid data
+test('Creates Grid Data Object', () => {
+    let data = new GridData(columSizes, rowSizes, indexs);
+
+    expect(data.colSizes).toEqual(['50px', '50px', '50px', '100px', '30%']);
+    expect(data.rowSizes).toEqual(['30%', 'auto', '150px', '20px', 'auto']);
+    expect(data.rectDatas).toEqual([{
+            index: 0,
+            rowStart: 1,
+            rowEnd: 5,
+            colStart: 1,
+            colEnd: 2
+        },
+        {
+            index: 1,
+            rowStart: 1,
+            rowEnd: 3,
+            colStart: 3,
+            colEnd: 5
+        },
+        {
+            index: 2,
+            rowStart: 4,
+            rowEnd: 5,
+            colStart: 3,
+            colEnd: 5
+        }
+    ]);
+});
+
+test('Generates CSS object using the GridData object', () => {
+    let data = new GridData(columSizes, rowSizes, indexs);
+
+    data.
 });

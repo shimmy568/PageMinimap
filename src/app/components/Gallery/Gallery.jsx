@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 import './Gallery.scss';
 import { Image } from './../Image/Image.jsx';
 import { SlideShow } from './../SlideShow/SlideShow.jsx';
+// eslint-disable-next-line no-unused-vars
+import { GridData } from './../../objects/GridData.js';
 
 /**
  * An image gallery
@@ -193,27 +195,33 @@ export class Gallery extends React.Component {
      * @param {Array<JSX.Element>} images - The the of image JSX elements that will be put in the gallery
      * @param {GridData} gridData - The grid data object that was passed in
      * 
-     * @returns {void}
+     * @returns {object} - The css to be applied to the container
      */
     __processGridDataImages(gallery, images, gridData){
-
-        let gridWidth = gridData[0].length;
-        let gridHeight = gridData.length;
-
+        let returnStuff = {
+            gridTemplateColumns: "",
+            gridTemplateRows: ""
+        };
         
-
-        for (let i = 0; i < gridData.length; i++) {
-            let row = gridData[i];
-            if(row.length !== gridWidth){
-                throw new Error('Grid data input must be rectangular');
-            }
-            for (let o = 0; o < row.length; o++) {
-                let cell = row[o];
-                let imageElement = images[cell.imageIndex];
-                
-            }
+        for(let i = 0; i < gridData.colSizes.length; i++){
+            returnStuff.gridTemplateColumns += gridData.colSizes[i] + " ";
         }
 
+        for(let i = 0; i < gridData.rowSizes.length; i++){
+            returnStuff.gridTemplateRows += gridData.rowSizes[i] + " ";
+        }
+
+        for(let i = 0; i < images.length; i++){
+            let data = gridData.getImageData(i);
+            images[i].props.style = {
+                gridColumnStart: data.colStart,
+                gridColumnEnd: data.colEnd,
+                gridRowStart: data.rowStart,
+                gridRowEnd: data.rowEnd
+            };
+        }
+
+        return returnStuff;
     }
 }
 
