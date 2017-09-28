@@ -39,17 +39,18 @@ export class Image extends React.Component {
             classAttr += ' focused';
         }
         if(this.props.onClick != null){
-            classAttr += ' foucsable';
+            classAttr += ' focusable';
         }
 
         if(this.props.aspectRatio != null){
             window.addEventListener('resize', this.maintainAspectRatio.bind(this));
         }
 
-        return(<div className={classAttr} ref={(img) => {
+        return(<div style={this.props.style} className={classAttr} ref={(img) => {
             this.imageBody = img;
         }}><img src={imgSrc} onLoad={() => {
             this.maintainAspectRatio();
+            this.fillBoxBest();
             if(this.props.onLoadCallback != null){
                 this.props.onLoadCallback(true);
             }
@@ -59,6 +60,27 @@ export class Image extends React.Component {
                 this.props.onLoadCallback(false);                
             }
         }} onClick={this.imageOnClickEvent.bind(this)}/></div>);
+    }
+
+    /**
+     * Either sets the width or height to be 100% for the image
+     * depending on what would fill the container better
+     * @author Owen Anderson
+     * 
+     * @returns {void}
+     */
+    fillBoxBest(){
+        let img = this.imageBody.firstChild;
+        let container = this.imageBody;
+
+        let imgAspectRatio = img.getBoundingClientRect().width / img.getBoundingClientRect().height;
+        let containerAspectRatio = container.getBoundingClientRect().width / container.getBoundingClientRect().height;
+
+        if(imgAspectRatio < containerAspectRatio){
+            img.style.width = "100%";
+        } else {
+            img.style.height = "100%";
+        }
     }
 
     /**
@@ -103,5 +125,6 @@ Image.propTypes = {
     index: PropTypes.number,
     onLoadCallback: PropTypes.func,
     onClick: PropTypes.func,
-    aspectRatio: PropTypes.number
+    aspectRatio: PropTypes.number,
+    style: PropTypes.object
 };

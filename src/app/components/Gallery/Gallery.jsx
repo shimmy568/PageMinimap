@@ -44,6 +44,29 @@ export class Gallery extends React.Component {
             focusImageFunc = null;
         }
 
+        //Set the class name for the parent for the diffrent display types
+        let className = this.className;
+        let gridCss = {
+            container: null,
+            images: []
+        };
+        if(this.state.displayType === 'grid'){
+            className += ' grid';
+            let gridData = new GridData(
+                this.props.gridData.columnTemplate,
+                this.props.gridData.rowTemplate,
+                this.props.gridData.indexs
+            );
+
+            let n = 0;
+            if(this.props.dir != null){
+                n = this.state.loadedImages;
+            }else{
+                n = this.props.imageList.length;
+            }
+            gridCss = this.__processGridDataImages(n, gridData);
+        }
+
         //Loads the images using either image list or dir
         let children = [];
         let loadedImageSrcList = [];        
@@ -52,6 +75,7 @@ export class Gallery extends React.Component {
                 let src = this.generateSrc(this.props.dir, i);
                 children.push(<Image
                     key={'image' + i}
+                    style={gridCss.images[i]}
                     aspectRatio={this.props.thumbAspectRatio}
                     onClick={focusImageFunc}
                     baseUrl={this.props.dir}
@@ -63,6 +87,7 @@ export class Gallery extends React.Component {
                 key={'image' + this.state.loadedImages}
                 aspectRatio={this.props.thumbAspectRatio}
                 onClick={focusImageFunc}
+                style={gridCss.images[this.state.loadedImages]}
                 baseUrl={this.props.dir} index={this.state.loadedImages}
                 onLoadCallback={this.imageCallback.bind(this)}/>
             );    
@@ -71,6 +96,7 @@ export class Gallery extends React.Component {
             for(let i = 0; i < loadedImageSrcList.length; i++){
                 children.push(<Image
                     key={'image' + i}
+                    style={gridCss.images[i]}
                     aspectRatio={this.props.thumbAspectRatio}
                     onClick={focusImageFunc}
                     src={loadedImageSrcList[i]}
@@ -92,13 +118,7 @@ export class Gallery extends React.Component {
             );
         }
 
-        //Set the class name for the parent for the diffrent display types
-        let className = this.className;
-        if(this.state.displayType === 'grid'){
-            className += ' grid';
-        }
-
-        return (<div className={className}>{focusedImage}{children}</div>);
+        return (<div style={gridCss.container} className={className}>{focusedImage}{children}</div>);
     }
 
     /**
@@ -191,13 +211,12 @@ export class Gallery extends React.Component {
      * @author Owen Anderson
      * @throws When the gridData param is not rectangular
      * 
-     * @param {JSX.Element} gallery - The list of images generated in render
-     * @param {Array<JSX.Element>} images - The the of image JSX elements that will be put in the gallery
+     * @param {number} n - The number of images in the grid
      * @param {GridData} gridData - The grid data object that was passed in
      * 
-     * @returns {object} - The css to be applied to the container
+     * @returns {object} - The css to be applied to the container and the images
      */
-    __processGridDataImages(gallery, images, gridData){
+    __processGridDataImages(n, gridData){
         let returnStuff = {
             gridTemplateColumns: "",
             gridTemplateRows: ""
@@ -211,17 +230,21 @@ export class Gallery extends React.Component {
             returnStuff.gridTemplateRows += gridData.rowSizes[i] + " ";
         }
 
-        for(let i = 0; i < images.length; i++){
+        let imageCss = [];
+        for(let i = 0; i < n; i++){
             let data = gridData.getImageData(i);
-            images[i].props.style = {
+            imageCss.push({
                 gridColumnStart: data.colStart,
                 gridColumnEnd: data.colEnd,
                 gridRowStart: data.rowStart,
                 gridRowEnd: data.rowEnd
-            };
+            });
         }
 
-        return returnStuff;
+        return {
+            container: returnStuff,
+            images: imageCss
+        };
     }
 }
 
@@ -232,5 +255,9 @@ Gallery.propTypes = {
     thumbAspectRatio: PropTypes.number,
     focusImageOnClick: PropTypes.bool,
     displayType: PropTypes.string,
-    gridData: PropTypes.arrayOf(PropTypes.object)
+    gridData: PropTypes.shape({
+        columnTemplate: PropTypes.arrayOf(PropTypes.oneOf([PropTypes.number, PropTypes.string])),
+        rowTemplate: PropTypes.arrayOf(PropTypes.oneOf([PropTypes.number, PropTypes.string])),
+        indexs: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number))
+    })
 };

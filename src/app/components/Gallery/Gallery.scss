@@ -1,11 +1,13 @@
 $galleryPrefix: '.E8CSls1TAR';
 
-#{$galleryPrefix} {
+#{$galleryPrefix}.grid{
+    display: grid
+}
+
+#{$galleryPrefix}:not(.grid) {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    width: 90%;
-    margin: auto;
 
     padding: 5px;
     .aplhaLayer{

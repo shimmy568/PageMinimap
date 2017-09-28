@@ -10,13 +10,22 @@ let imageList = [
     './images/image0.png',
     './images/image1.png',
     './images/image2.png',
-    './images/image3.png',
-    './images/image4.png',
-    './images/image5.png',
-    './images/image6.png'
 ];
 
-// 
+let gridData = {
+    columnTemplate: [],
+    rowTemplate: [],
+    indexs: [
+        [0, 0, 1, 1, 1],
+        [0, 0, 1, 1, 1],
+        [0, 0, 1, 1, 1],
+        [0, 0, 2, 2, 2],
+        [0, 0, 2, 2, 2]
+    ]
+};
+
+
 // <Gallery thumbAspectRatio={1} imageSwitchCoolDownTime={1000} dir='./images/image*.png'/>
 ReactDOM.render(
-    <div id="container"><Gallery dir='./images/image*.png' focusImageOnClick={true} /></div>, document.getElementById('root'));
+    <div id="container"><Gallery gridData={gridData} displayType='grid' imageList={imageList} focusImageOnClick={true} /></div>, document.getElementById('root'));
+
