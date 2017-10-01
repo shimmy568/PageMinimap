@@ -73,12 +73,15 @@ export class Image extends React.Component {
         let img = this.imageBody.firstChild;
         let container = this.imageBody;
 
-        let imgAspectRatio = img.getBoundingClientRect().width / img.getBoundingClientRect().height;
+        
+        let imgAspectRatio = img.width / img.height;
         let containerAspectRatio = container.getBoundingClientRect().width / container.getBoundingClientRect().height;
-
+        
         if(imgAspectRatio < containerAspectRatio){
+            console.log('width');
             img.style.width = "100%";
         } else {
+            console.log('height');
             img.style.height = "100%";
         }
     }

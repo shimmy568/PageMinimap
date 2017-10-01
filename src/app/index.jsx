@@ -9,7 +9,7 @@ import { SlideShow } from './components/SlideShow/SlideShow.jsx';
 let imageList = [
     './images/image0.png',
     './images/image1.png',
-    './images/image2.png',
+    'https://lh3.googleusercontent.com/eftq4Sg95rUqiJcx_JESlHbYFRvDLE8f7qdCWAp3u2OxGAukFXPsSarn-O8IKFdc0P7HPmoWKw=w640-h400-e365',
 ];
 
 let gridData = {
