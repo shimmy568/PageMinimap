@@ -38,15 +38,15 @@ export class GridData {
      */
     __convertNumbers(rowNum, colNum) {
 
-        //Replace any missing values with auto for both rowsizes and colsizes
+        //Replace any missing values with 1fr for both rowsizes and colsizes
         for(let i = 0; i < rowNum; i++){
             if(this.rowSizes[i] == null){
-                this.rowSizes[i] = 'auto';
+                this.rowSizes[i] = '1fr';
             }
         }
         for(let i = 0; i < colNum; i++){
             if(this.colSizes[i] == null){
-                this.colSizes[i] = 'auto';
+                this.colSizes[i] = '1fr';
             }
         }
 
@@ -137,13 +137,13 @@ export class GridData {
         }
 
         //Create the rect data object and make sure everything is properly indexed for the css
-        
+        //NOTE the end colum is exclusive, so thats why it's plus 2
         let rectData = new ImageRectData(
             imageIndex,
             rowNum + 1,
-            rowNum + (rectHeight + 1),
+            rowNum + (rectHeight + 2),
             colNum + 1,
-            colNum + (rectWidth + 1)
+            colNum + (rectWidth + 2)
         );
         return rectData;
     }

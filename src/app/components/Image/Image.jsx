@@ -33,7 +33,6 @@ export class Image extends React.Component {
             imgSrc = this.props.baseUrl.substring(0, indexOfStart) + this.props.index + this.props.baseUrl.substring(indexOfStart + 1);
         }
 
-
         let classAttr = this.className;
         if(this.state.focused){
             classAttr += ' focused';
@@ -46,11 +45,16 @@ export class Image extends React.Component {
             window.addEventListener('resize', this.maintainAspectRatio.bind(this));
         }
 
+        window.addEventListener('resize', this.fillBoxBest.bind(this));        
+
         return(<div style={this.props.style} className={classAttr} ref={(img) => {
             this.imageBody = img;
         }}><img src={imgSrc} onLoad={() => {
             this.maintainAspectRatio();
-            this.fillBoxBest();
+
+            //wait a bit to make sure it works right
+            window.setTimeout(this.fillBoxBest.bind(this), 10);
+
             if(this.props.onLoadCallback != null){
                 this.props.onLoadCallback(true);
             }
@@ -73,16 +77,15 @@ export class Image extends React.Component {
         let img = this.imageBody.firstChild;
         let container = this.imageBody;
 
-        
-        let imgAspectRatio = img.width / img.height;
+        let imgAspectRatio = img.naturalWidth / img.naturalHeight;
         let containerAspectRatio = container.getBoundingClientRect().width / container.getBoundingClientRect().height;
         
         if(imgAspectRatio < containerAspectRatio){
-            console.log('width');
             img.style.width = "100%";
+            img.style.height = null;
         } else {
-            console.log('height');
             img.style.height = "100%";
+            img.style.width = null;
         }
     }
 
@@ -129,5 +132,6 @@ Image.propTypes = {
     onLoadCallback: PropTypes.func,
     onClick: PropTypes.func,
     aspectRatio: PropTypes.number,
-    style: PropTypes.object
+    style: PropTypes.object,
+    layout: PropTypes.string
 };

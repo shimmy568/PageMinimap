@@ -21,29 +21,23 @@ test('Creates Grid Data Object', () => {
     expect(data.rectDatas).toEqual([{
             index: 0,
             rowStart: 1,
-            rowEnd: 5,
+            rowEnd: 6,
             colStart: 1,
-            colEnd: 2
+            colEnd: 3
         },
         {
             index: 1,
             rowStart: 1,
-            rowEnd: 3,
+            rowEnd: 4,
             colStart: 3,
-            colEnd: 5
+            colEnd: 6
         },
         {
             index: 2,
             rowStart: 4,
-            rowEnd: 5,
+            rowEnd: 6,
             colStart: 3,
-            colEnd: 5
+            colEnd: 6
         }
     ]);
-});
-
-test('Generates CSS object using the GridData object', () => {
-    let data = new GridData(columSizes, rowSizes, indexs);
-
-    data.
 });
