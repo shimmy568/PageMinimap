@@ -82,10 +82,16 @@ export class Image extends React.Component {
         
         if(imgAspectRatio < containerAspectRatio){
             img.style.width = "100%";
+            img.style.position = 'relative';
+            img.style.top = '50%';
+            img.style.transform = 'translateY(-50%)';
             img.style.height = null;
         } else {
             img.style.height = "100%";
             img.style.width = null;
+            img.style.position = null;
+            img.style.top = null;
+            img.style.transform = null;
         }
     }
 

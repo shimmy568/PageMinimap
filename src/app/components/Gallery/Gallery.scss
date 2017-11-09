@@ -14,8 +14,12 @@ $galleryPrefix: '.E8CSls1TAR';
     height: 100%;
 
     padding: 5px;
+}
+
+#{$galleryPrefix}{
     .aplhaLayer{
         position: fixed;
+        z-index: 10;
         top: 0;
         left: 0;
         right: 0;
