@@ -27,5 +27,5 @@ let gridData = {
 
 // <Gallery thumbAspectRatio={1} imageSwitchCoolDownTime={1000} dir='./images/image*.png'/>
 ReactDOM.render(
-    <div id="container"><Gallery gridData={gridData} displayType='grid' dir='./images/imagegrid*.png' focusImageOnClick={true} /></div>, document.getElementById('root'));
+    <div id="container"><Gallery gridData={gridData} displayType='grid' images={'./images/imagegrid*.png'} focusImageOnClick={true} /></div>, document.getElementById('root'));
 

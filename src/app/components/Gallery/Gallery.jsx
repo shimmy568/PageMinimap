@@ -23,7 +23,7 @@ export class Gallery extends React.Component {
         this.state = {
             loadedImages: 0,
             focusedImage: -1,
-            loaded: props.imageList != null,
+            loaded: (typeof props.images === "object" && typeof props.images.length === "number"),
             displayType: props.displayType || 'default'
         };
         this.first = true;
@@ -59,10 +59,12 @@ export class Gallery extends React.Component {
             );
 
             let n = 0;
-            if(this.props.dir != null){
+            if(typeof this.props.images === "string"){
                 n = this.state.loadedImages;
+            }else if(typeof this.props.images === "object" && typeof this.props.images.length === "number"){
+                n = this.props.images.length;
             }else{
-                n = this.props.imageList.length;
+                throw new Error("images argument must be a list of urls or a string for the path");
             }
             gridCss = this.__processGridDataImages(n, gridData);
         }
@@ -70,15 +72,15 @@ export class Gallery extends React.Component {
         //Loads the images using either image list or dir
         let children = [];
         let loadedImageSrcList = [];        
-        if(this.props.dir != null){
+        if(typeof this.props.images === "string"){
             for(let i = 0; i < this.state.loadedImages; i++){
-                let src = this.generateSrc(this.props.dir, i);
+                let src = this.generateSrc(this.props.images, i);
                 children.push(<Image
                     key={'image' + i}
                     style={gridCss.images[i]}
                     aspectRatio={this.props.thumbAspectRatio}
                     onClick={focusImageFunc}
-                    baseUrl={this.props.dir}
+                    baseUrl={this.props.images}
                     index={i}/>
                 );
                 loadedImageSrcList.push(src);
@@ -88,11 +90,11 @@ export class Gallery extends React.Component {
                 aspectRatio={this.props.thumbAspectRatio}
                 onClick={focusImageFunc}
                 style={gridCss.images[this.state.loadedImages]}
-                baseUrl={this.props.dir} index={this.state.loadedImages}
+                baseUrl={this.props.images} index={this.state.loadedImages}
                 onLoadCallback={this.imageCallback.bind(this)}/>
             );    
-        } else if(this.props.imageList != null){
-            loadedImageSrcList = this.props.imageList;
+        } else if(typeof this.props.images === "object" && typeof this.props.images.length === "number"){ 
+            loadedImageSrcList = this.props.images;
             for(let i = 0; i < loadedImageSrcList.length; i++){
                 children.push(<Image
                     key={'image' + i}
@@ -250,8 +252,7 @@ export class Gallery extends React.Component {
 
 
 Gallery.propTypes = {
-    dir: PropTypes.string,
-    imageList: PropTypes.arrayOf(PropTypes.string),
+    images: PropTypes.oneOf([PropTypes.arrayOf(PropTypes.string), PropTypes.string]),
     thumbAspectRatio: PropTypes.number,
     focusImageOnClick: PropTypes.bool,
     displayType: PropTypes.string,

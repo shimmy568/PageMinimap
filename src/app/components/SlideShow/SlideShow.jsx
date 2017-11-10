@@ -84,10 +84,19 @@ export class SlideShow extends React.Component{
             }
         }
 
+        let displayLeft = "block";
+        if(this.state.currentImageIndex === 0){
+            displayLeft = "None";
+        }
+        let displayRight = "block";
+        if(this.state.currentImageIndex === this.props.images.length - 1){
+            displayRight = "None";
+        }
+
         return(
             <div ref={(input) => {this.slideShowContainer = input;}} className={classValue} tabIndex='99999' onKeyDown={this.keyDownEventHandler.bind(this)} onKeyUp={this.resetImageChangeCooldown.bind(this)}>
-                <button className='left' onClick={this.previousImage.bind(this)}><Previous width={50} height={50}/></button>
-                <button className='right' onClick={this.nextImage.bind(this)}><Next width={50} height={50}/></button>
+                <button style={{display: displayLeft}} className='left' onClick={this.previousImage.bind(this)}><Previous width={50} height={50}/></button>
+                <button style={{display: displayRight}} className='right' onClick={this.nextImage.bind(this)}><Next width={50} height={50}/></button>
                 <div className='progressTracker'>{progressTracker}</div>
                 <img src={imageSrc} onLoad={fullscreenOnLoadEvent} onClick={this.nextImage.bind(this)}/>
             </div>
