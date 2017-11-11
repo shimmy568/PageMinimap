@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 import Next from './assets/Next.svg';
 import Previous from './assets/Previous.svg';
+import Close from './assets/Close.svg';
 
 import './SlideShow.scss';
 
@@ -97,6 +98,7 @@ export class SlideShow extends React.Component{
             <div ref={(input) => {this.slideShowContainer = input;}} className={classValue} tabIndex='99999' onKeyDown={this.keyDownEventHandler.bind(this)} onKeyUp={this.resetImageChangeCooldown.bind(this)}>
                 <button style={{display: displayLeft}} className='left' onClick={this.previousImage.bind(this)}><Previous width={50} height={50}/></button>
                 <button style={{display: displayRight}} className='right' onClick={this.nextImage.bind(this)}><Next width={50} height={50}/></button>
+                <button className='close' onClick={this.props.onClose}><Close width={20} height={20}/></button>
                 <div className='progressTracker'>{progressTracker}</div>
                 <img src={imageSrc} onLoad={fullscreenOnLoadEvent} onClick={this.nextImage.bind(this)}/>
             </div>
@@ -178,13 +180,17 @@ export class SlideShow extends React.Component{
         //set the next and prev buttons dimensions
         let btns = this.slideShowContainer.getElementsByTagName('BUTTON');
         for(let i = 0; i < btns.length; i++){
-            if(smallerDim * 0.1 > 50){
-                btns[i].firstChild.style.width = '50px';
-                btns[i].firstChild.style.height = '50px';
+            let dim = 0;
+            if(btns[i].classList.contains('close')){
+                dim = 0.05 * smallerDim;
             }else{
-                btns[i].firstChild.style.width = smallerDim * 0.1 + 'px';
-                btns[i].firstChild.style.height = smallerDim * 0.1 + 'px';
+                dim = 0.1 * smallerDim;
             }
+            if(dim > 50){
+                dim = 50;
+            }
+            btns[i].firstChild.style.width = dim + 'px';
+            btns[i].firstChild.style.height = dim + 'px';
         }
 
         //set the dimensions for the progress tracker
@@ -198,9 +204,7 @@ export class SlideShow extends React.Component{
                 }
                 break;
             }
-                
         }
-        
     }
 
     /**
@@ -237,8 +241,6 @@ export class SlideShow extends React.Component{
                 });
             }                
         }
-
-
         //Call the user provided next image func if provided
         if(this.props.nextImage != null){
             this.props.nextImage();
@@ -380,5 +382,6 @@ SlideShow.propTypes = {
     nextImage: PropTypes.func,
     previousImage: PropTypes.func,
     imageSwitchCoolDownTime: PropTypes.number,
-    progressDisplayType: PropTypes.string
+    progressDisplayType: PropTypes.string,
+    onClose: PropTypes.func
 };

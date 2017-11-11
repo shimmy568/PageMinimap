@@ -114,8 +114,8 @@ export class Gallery extends React.Component {
         let focusedImage;
         if(this.state.focusedImage !== -1 && this.state.loaded){
             focusedImage = (
-                <div className='aplhaLayer' onClick={this.removeFocus.bind(this)}>
-                    <SlideShow fullscreen={true} images={loadedImageSrcList} startIndex={this.state.focusedImage}/>
+                <div className='aplhaLayer' onClick={this.onAlphaClick.bind(this)}>
+                    <SlideShow fullscreen={true} onClose={this.closeSlideshow.bind(this)} images={loadedImageSrcList} startIndex={this.state.focusedImage}/>
                 </div>
             );
         }
@@ -199,12 +199,22 @@ export class Gallery extends React.Component {
      * 
      * @returns {void}
      */
-    removeFocus(e){
+    onAlphaClick(e){
         if(e.target.classList.contains("aplhaLayer")){
-            this.setState({
-                focusedImage: -1
-            });
+            this.closeSlideshow();
         }
+    }
+
+    /**
+     * Close this slideshow thing that shows images when they are clicked on
+     * @author Owen Anderson
+     * 
+     * @returns {void}
+     */
+    closeSlideshow(){
+        this.setState({
+            focusedImage: -1
+        });
     }
 
     /**
@@ -252,7 +262,7 @@ export class Gallery extends React.Component {
 
 
 Gallery.propTypes = {
-    images: PropTypes.oneOf([PropTypes.arrayOf(PropTypes.string), PropTypes.string]),
+    images: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.string]),
     thumbAspectRatio: PropTypes.number,
     focusImageOnClick: PropTypes.bool,
     displayType: PropTypes.string,
